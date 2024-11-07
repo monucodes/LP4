@@ -1,0 +1,109 @@
+PRACTICAL NO 2
+
+1
+import tensorflow as tf
+from tensorflow import keras
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import random
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+2
+mnist = tf.keras.datasets.mnist
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+3
+len(x_train)
+
+4
+len(x_test)
+
+5
+x_train.shape
+
+6
+x_test.shape
+
+7
+x_train[0]
+
+8
+plt.matshow(x_train[0])
+
+9
+x_train = x_train / 255
+x_test = x_test / 255
+
+10
+x_train[0]
+
+11
+model = keras.Sequential([
+    keras.layers.Flatten(input_shape=(28, 28)),
+    keras.layers.Dense(128, activation='relu'),
+    keras.layers.Dense(10, activation='softmax')
+])
+
+12
+model.summary()
+
+13
+model.compile(optimizer='sgd',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+14
+history=model.fit(x_train, y_train,validation_data=(x_test,y_test),epochs=10)
+
+15
+test_loss,test_acc=model.evaluate(x_test,y_test)
+print("Loss=%.3f" %test_loss)
+print("Accuracy=%.3f" %test_acc)
+
+16
+n=random.randint(0,9999)
+plt.imshow(x_test[n])
+plt.show()
+
+17
+predicted_value=model.predict(x_test)
+print("Handwritten number in the image is= %d" %np.argmax(predicted_value[n]))
+
+18
+get_ipython().run_line_magic('pinfo2', 'history.history')
+
+19
+history.history.keys()
+
+20
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['Train', 'Validation'], loc='upper left')
+plt.show()
+
+21
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['Train', 'Validation'], loc='upper left')
+plt.show()
+
+22
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('Training Loss and accuracy')
+plt.ylabel('accuracy/Loss')
+plt.xlabel('epoch')
+plt.legend(['accuracy', 'val_accuracy','loss','val_loss'])
+plt.show()
+
+
+
